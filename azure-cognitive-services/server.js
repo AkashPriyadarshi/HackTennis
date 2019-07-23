@@ -217,7 +217,7 @@ const options = {
       console.log('racquet : (' + racquetStartX + ',' + racquetStartY + ')' );
   
       // detection
-      if(racquetStartX<playerStartX){
+      if(racquetStartX>playerStartX){
           console.log('forehand')
           res.send('forehand');
       } else{
