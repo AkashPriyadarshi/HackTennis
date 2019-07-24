@@ -5,7 +5,7 @@ const fs = require('fs');
 var app = express();
 
 // Replace <Subscription Key> with your valid subscription key.
-const subscriptionKey = 'dsdsd';
+const subscriptionKey = '828ee602188545b2ac6af94efb08485f';
 
 app.use(myParser.urlencoded({
   extended: true
@@ -28,7 +28,7 @@ var imageUrl = '';
 var startTime = new Date();
 
 // POST request
-app.post('/analyze', function (req, res){
+app.get('/analyze', function (req, res){
     //var array = [28, 29, 30, 31, 32, 33, 34, 35];
     var array= [];
     for(var j = 1;j<=117;j++){
@@ -232,6 +232,6 @@ function analyze(imageUrl, number, arrayOfAllElements, visited) {
 //     return count;
 // }
 
-app.listen(3000, function () {
+app.listen(30000, function () {
   console.log('Example app listening on port 3000!');
 });
