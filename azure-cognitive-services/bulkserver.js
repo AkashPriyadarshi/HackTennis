@@ -5,7 +5,7 @@ const fs = require('fs');
 var app = express();
 
 // Replace <Subscription Key> with your valid subscription key.
-const subscriptionKey = '828ee602188545b2ac6af94efb08485f';
+const subscriptionKey = 'dsdsd';
 
 app.use(myParser.urlencoded({
   extended: true
