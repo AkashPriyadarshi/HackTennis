@@ -25,25 +25,56 @@ const uriBase =
 var imageUrl = '';
 // https://raw.githubusercontent.com/AkashPriyadarshi/HackTennis/master/images/00028.jpg
 
+var startTime = new Date();
+
 // POST request
 app.post('/analyze', function (req, res){
     //var array = [28, 29, 30, 31, 32, 33, 34, 35];
-    var array = [28, 29, 30, 31];
+    var array= [];
+    for(var j = 1;j<=117;j++){
+        array[j-1] = j;
+    }
+
+    forehands = [
+
+    ];
+    backhands = [
+
+    ];
+    didNotDetect = [
+        
+    ];
+    var visited = new Array(117);
+
     array.forEach((item) => {
         console.log('');
-        imageUrl = "https://raw.githubusercontent.com/AkashPriyadarshi/HackTennis/master/images/000";
-        imageUrl += item;
+        imageUrl = "https://raw.githubusercontent.com/AkashPriyadarshi/HackTennis/master/images/";
+        var number = 0;
+        if(item < 10){
+            number = '00' + item;
+        } else if(item < 100) {
+            number = '0' + item;
+        } else {
+            number = item;
+        }
+        imageUrl += number;
+        // imageUrl += item;
         imageUrl += ".jpg";
         console.log('i == ' + item);
         console.log('imageUrl == ' + imageUrl);
         
-        analyze(imageUrl);
+        analyze(imageUrl, number, array, visited);
     });
 
-    res.send({});
+    setTimeout(function () {   
+        res.send({
+            "forehands":forehands,
+            "backhands":backhands
+        })
+    }, 5000); 
 });
 
-function analyze(imageUrl) {
+function analyze(imageUrl, number, arrayOfAllElements, visited) {
     var personDetected = false;
     var ballDetected = false;
     var racquetDetected = false;
@@ -71,8 +102,9 @@ function analyze(imageUrl) {
         }
 
         let rectangles = JSON.parse(body).objects;
-        if(rectangles === null) {
+        if(rectangles === undefined || rectangles === null) {
             rectangles = [];
+            
         }
         
         // variables
@@ -92,6 +124,7 @@ function analyze(imageUrl) {
         var racquetEndY = 0;
     
         // analysis algorithm
+        // console.log(rectangles);
         rectangles.forEach((rectangle) => {
         var currentRectangle = rectangle;
             // console.log(currentRectangle);
@@ -136,18 +169,68 @@ function analyze(imageUrl) {
             if(racquetStartX>personStartX){
                 console.log('forehand')
                 // res.send('forehand');
+                forehands.push(number/10)
             } else{
                 console.log('backhand');
+                backhands.push(number/10);
                 // res.send('backhand');
             }
             console.log('');
             console.log('')
         } else {
-            console.log('person and racquet NOT detected for image:' + imageUrl);
-            console.log('')
+            // console.log('person and racquet NOT detected for image:' + imageUrl);
+            //console.log('')
+            didNotDetect.push(0);
         }
+
+        // console.log('arrayOfAllElements.length == ' + arrayOfAllElements.length)
+        // console.log('forehands.length == ' + forehands.length)
+        // console.log('backhands.length == ' + backhands.length)
+        // console.log('didNotDetect.length == ' + didNotDetect.length)
+
+        // visited[number] = 1;
+        // var countNow = countOnes(visited);
+        // console.log('countNow == ' + countNow);
+        // if(countNow === 117) {
+        //     return({
+        //         "forehands":forehands,
+        //         "backhands":backhands
+        //     })
+        // }
+
+        // var endTime = new Date();
+        // var timeDiff = endTime - startTime; //in ms
+        // timeDiff /= 1000;
+        // var seconds = Math.round(timeDiff);
+        // console.log('startTime == ' + startTime);
+        // console.log('endTime == ' + endTime);
+        // console.log('seconds == ' + seconds);
+        // if (seconds >= 5){
+        //     return({
+        //         "forehands":forehands,
+        //         "backhands":backhands
+        //     })
+        // }
+
+        // if(arrayOfAllElements.length == (forehands.length + backhands.length + didNotDetect.length)){
+        //     return({
+        //         "forehands":forehands,
+        //         "backhands":backhands
+        //     })
+        // }
     });
 }
+
+// function countOnes(array) {
+//     var count = 0;
+//     for(var  i =0;i<array.length;i++){
+//         if(array[i] === 1)
+//         {
+//             count += 1;
+//         }
+//     }
+//     return count;
+// }
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
