@@ -31,7 +31,7 @@ var startTime = new Date();
 app.get('/analyze', function (req, res){
     //var array = [28, 29, 30, 31, 32, 33, 34, 35];
     var array= [];
-    for(var j = 1;j<=117;j++){
+    for(var j = 1;j<=378;j+=10){
         array[j-1] = j;
     }
 
@@ -48,7 +48,7 @@ app.get('/analyze', function (req, res){
 
     array.forEach((item) => {
         console.log('');
-        imageUrl = "https://raw.githubusercontent.com/AkashPriyadarshi/HackTennis/master/images/";
+        imageUrl = "https://raw.githubusercontent.com/AkashPriyadarshi/HackTennis/master/images/grasslawn/";
         var number = 0;
         if(item < 10){
             number = '00' + item;
@@ -63,6 +63,10 @@ app.get('/analyze', function (req, res){
         console.log('i == ' + item);
         console.log('imageUrl == ' + imageUrl);
         
+        console.log('sleeping for one second');
+        // setTimeout(function () {
+        //     analyze(imageUrl, number, array, visited);
+        // }, 1000); 
         analyze(imageUrl, number, array, visited);
     });
 
@@ -71,7 +75,7 @@ app.get('/analyze', function (req, res){
             "forehands":forehands,
             "backhands":backhands
         })
-    }, 5000); 
+    }, 10000); 
 });
 
 function analyze(imageUrl, number, arrayOfAllElements, visited) {
@@ -106,7 +110,13 @@ function analyze(imageUrl, number, arrayOfAllElements, visited) {
             rectangles = [];
             
         }
-        
+
+        if(imageUrl === 'https://raw.githubusercontent.com/AkashPriyadarshi/HackTennis/master/images/grasslawn/240.jpg') {
+            console.log('printing for 240 - start')
+            console.log(JSON.parse(body));
+            console.log('printing for 240 - end');
+        }
+            
         // variables
         var ballStartX = 0;
         var ballStartY = 0;
@@ -129,7 +139,7 @@ function analyze(imageUrl, number, arrayOfAllElements, visited) {
         var currentRectangle = rectangle;
             // console.log(currentRectangle);
             var rectangleCoordinates = currentRectangle.rectangle;
-            
+
             // tennis ball
             if(currentRectangle.object === 'tennis ball'){
                 // console.log('inside tennis ball')
@@ -161,6 +171,12 @@ function analyze(imageUrl, number, arrayOfAllElements, visited) {
             }
         })
 
+        if(imageUrl === 'https://raw.githubusercontent.com/AkashPriyadarshi/HackTennis/master/images/grasslawn/240.jpg') {
+            console.log('personDetected == ' + personDetected);
+            console.log('racquetDetected == ' + racquetDetected);
+            console.log('ballDetected == ' + ballDetected);
+        }
+
         // detection algorithm
         if(personDetected == true && racquetDetected == true) {
             console.log('person and racquet both detected for image:' + imageUrl);
@@ -180,7 +196,10 @@ function analyze(imageUrl, number, arrayOfAllElements, visited) {
         } else {
             // console.log('person and racquet NOT detected for image:' + imageUrl);
             //console.log('')
+            // console.log('did not detect for ' + imageUrl);
             didNotDetect.push(0);
+            console.log('');
+            console.log('')
         }
 
         // console.log('arrayOfAllElements.length == ' + arrayOfAllElements.length)
